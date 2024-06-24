@@ -220,7 +220,7 @@ namespace Bark
 
         IEnumerator JoinLobbyInternal(string name, string gamemode)
         {
-            PhotonNetworkController.Instance.AttemptDisconnect();
+            NetworkSystem.Instance.ReturnToSinglePlayer();
             do
             {
                 yield return new WaitForSeconds(1f);
@@ -228,17 +228,17 @@ namespace Bark
             }
             while (PhotonNetwork.InRoom);
             
-            string gamemodeCache = GorillaComputer.instance.currentGameMode;
+            string gamemodeCache = GorillaComputer.instance.currentGameMode.Value;
             Logging.Debug("Changing gamemode from", gamemodeCache, "to", gamemode);
-            GorillaComputer.instance.currentGameMode = gamemode;
-            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(name);
+            GorillaComputer.instance.currentGameMode.Value = gamemode;
+            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(name, JoinType.Solo);
 
             while (!PhotonNetwork.InRoom)
             {
                 yield return new WaitForSeconds(1f);
                 Logging.Debug("Waiting to connect");
             }
-            GorillaComputer.instance.currentGameMode = gamemodeCache;
+            GorillaComputer.instance.currentGameMode.Value = gamemodeCache;
         }
     }
 }

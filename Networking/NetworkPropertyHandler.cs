@@ -81,12 +81,12 @@ namespace Bark.Networking
                 throw new Exception("Both player and rig are null");
 
             if (player is null)
-                player = rig.myPlayer;
+                player = PhotonNetwork.LocalPlayer;
             else if (rig is null)
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    rig = player.Rig();
+                    rig = GorillaGameManager.instance.FindPlayerVRRig(PhotonNetwork.PlayerList[i]);
                     if (rig is null)
                     {
                         yield return new WaitForSeconds(.1f);
